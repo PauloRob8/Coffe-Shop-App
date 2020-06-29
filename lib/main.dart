@@ -1,4 +1,4 @@
-import 'package:CoffeShopApp/pages/home_page.dart';
+import 'package:CoffeShopApp/pages/home/home_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {

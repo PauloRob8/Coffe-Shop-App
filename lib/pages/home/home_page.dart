@@ -8,7 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class HomePage extends StatelessWidget{
 
   Item teste = Item(favorite: false,name: "Iced Caramel Mocca",price: 4.5);
-  var selectedList = [true,false,false]; 
+  var selectedList = [false,false,true]; 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -58,7 +58,7 @@ class HomePage extends StatelessWidget{
               decoration: BoxDecoration(
                 color: Colors.transparent,
               ),
-              height: size.height *0.60,
+              height: size.height *0.53,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,

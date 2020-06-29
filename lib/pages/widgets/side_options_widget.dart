@@ -4,10 +4,16 @@ Widget sideNavOptionsBar(Size size,List<bool> selectedList) {
   return RotatedBox(
     quarterTurns: -1,
     child: Container(
+      margin: EdgeInsets.only(right:18),
       child: ToggleButtons(
         selectedColor: Color(0xffeb7a27),
         disabledBorderColor: Colors.transparent,
+        borderColor: Colors.transparent,
+        selectedBorderColor: Colors.transparent,
         isSelected: selectedList,
+        onPressed: (int index){
+          selectedList[index] = !selectedList[index];
+        },
         children: <FlatButton>[
           FlatButton(
             onPressed: (){},

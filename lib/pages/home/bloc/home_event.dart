@@ -1,0 +1,15 @@
+part of 'home_bloc.dart';
+
+abstract class HomeEvent extends Equatable {
+  const HomeEvent();
+}
+
+class ChangePageFilter extends HomeEvent{
+  final int index;
+
+  ChangePageFilter({this.index});
+
+  @override
+  List<Object> get props => [index];
+  
+}

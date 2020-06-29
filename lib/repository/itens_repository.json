@@ -1,0 +1,42 @@
+[
+    {
+        "name": "Classic Latte",
+        "type": "coffe",
+        "size": "small",
+        "topping": "Wipped Cream",
+        "flavor": "Caramel",
+        "favorite": "false",
+        "price": "4.50"
+    },
+
+    {
+        "name": "Classic Latte",
+        "type":"coffe",
+        "size": "small",
+        "topping": "Wipped Cream",
+        "flavor": "Vannila",
+        "favorite": "true",
+        "price": "4.50"
+    },
+
+    {
+        "name": "Iced Tea",
+        "type":"tea",
+        "size": "small",
+        "topping": "None",
+        "flavor": "Caramel",
+        "favorite": "false",
+        "price": "4.50"
+    },
+
+    {
+        "name": "Iced Tea",
+        "type":"tea",
+        "size": "small",
+        "topping": "Wipped Cream",
+        "flavor": "Caramel",
+        "favorite": "false",
+        "price": "4.50"
+    }
+    
+]
