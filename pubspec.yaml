@@ -13,8 +13,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  
+  #UI
   cupertino_icons: ^0.1.3
+  font_awesome_flutter: ^8.7.0
 
 dev_dependencies:
   flutter_test:
