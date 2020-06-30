@@ -15,7 +15,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Item item2 = Item();
   Item item3 = Item();
 
-  int currentIndex = 0;
+  int currentIndex = 2;
 
   final Repository repository;
 
@@ -28,19 +28,32 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Stream<HomeState> mapEventToState(
     HomeEvent event,
   ) async* {
-    yield HomeLoading();
-    if(event is ChangePageFilter ){
+    List<Item> allItens = await getItens();
+    if(event is AppStarted ){
+      this.add(ChangePageFilter(index: this.currentIndex));
+    }
+    if(event is ChangePageFilter){
       this.currentIndex = event.index;
+      yield HomeFilterChanged(this.currentIndex);
       yield HomeLoading();
       if(this.currentIndex == 2){
-        yield HomeInitial();
+        yield HomeAllItens(allItens);
       }
       if(this.currentIndex == 1){
-        yield HomeFilteredByCoffe();
+        yield HomeFilteredByCoffe(allItens);
       }
-      if(this.currentIndex == 0){
-        yield HomeFilteredByTea();
+      if(this.currentIndex== 0){
+        yield HomeFilteredByTea(allItens);
       }
     }
   }
+
+  getItens(){
+   return this.repository.getallItens();
+  }
+
+  filterTea(){
+    
+  }
+
 }
