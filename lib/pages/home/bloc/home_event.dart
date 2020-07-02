@@ -21,3 +21,13 @@ class ChangePageFilter extends HomeEvent{
   List<Object> get props => [index];
   
 }
+
+class LikeItem extends HomeEvent{
+  final bool liked;
+
+  LikeItem(this.liked);
+  
+  @override
+  List<Object> get props => [liked];
+
+}

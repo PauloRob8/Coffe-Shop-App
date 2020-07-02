@@ -10,7 +10,6 @@ part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-
   Item item1 = Item();
   Item item2 = Item();
   Item item3 = Item();
@@ -29,31 +28,54 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     HomeEvent event,
   ) async* {
     List<Item> allItens = await getItens();
-    if(event is AppStarted ){
+    List<Item> teaList = getTeaList(allItens);
+    List<Item> coffeeList =  getCoffeeList(allItens);
+
+    if (event is AppStarted) {
       this.add(ChangePageFilter(index: this.currentIndex));
     }
-    if(event is ChangePageFilter){
+    if (event is ChangePageFilter) {
       this.currentIndex = event.index;
       yield HomeFilterChanged(this.currentIndex);
       yield HomeLoading();
-      if(this.currentIndex == 2){
+      if (this.currentIndex == 2) {
         yield HomeAllItens(allItens);
       }
-      if(this.currentIndex == 1){
-        yield HomeFilteredByCoffe(allItens);
+      if (this.currentIndex == 1) {
+        yield HomeFilteredByCoffe(coffeeList);
       }
-      if(this.currentIndex== 0){
-        yield HomeFilteredByTea(allItens);
+      if (this.currentIndex == 0) {
+        yield HomeFilteredByTea(teaList);
       }
+    }
+    if (event is LikeItem){
+      yield ItemLiked(event.liked);
     }
   }
 
-  getItens(){
-   return this.repository.getallItens();
+  getItens() {
+    return this.repository.getallItens();
   }
 
-  filterTea(){
-    
+  getCoffeeList(List<Item> allItens) {
+    List<Item> filteredList = [];
+    for (int i = 0; i < allItens.length; i++) {
+      if (allItens[i].type == "coffee") {
+        filteredList.add(allItens[i]);
+      }
+    }
+    return filteredList;
   }
 
+  getTeaList(List<Item> allItens) {
+    List<Item> filteredList = [];
+    for (int i = 0; i < allItens.length; i++) {
+      if (allItens[i].type == "tea") {
+        filteredList.add(allItens[i]);
+      }
+    }
+    return filteredList;
+  }
 }
+
+

@@ -52,3 +52,13 @@ class HomeFilteredByTea extends HomeState{
   List<Object> get props => [list];
 
 }
+
+class ItemLiked extends HomeState{
+  final bool liked;
+
+  ItemLiked(this.liked);
+  
+  @override
+  List<Object> get props => [liked];
+  
+}

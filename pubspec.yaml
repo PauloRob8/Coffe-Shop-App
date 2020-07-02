@@ -33,6 +33,8 @@ flutter:
     - lib/assets/drawable-hdpi/Profile pic.png
     - lib/assets/drawable-hdpi/Profile pic.jpg
     - lib/repository/itens_repository.json
+    - lib/assets/drawable-hdpi/coffe_cup.png
+    - lib/assets/drawable-hdpi/tea_cup.png
 
   fonts:
     - family: AbrilFatFace
