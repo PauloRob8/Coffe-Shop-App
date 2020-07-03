@@ -13,7 +13,6 @@ class AddToCart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AddtocartBloc addtocartBloc = BlocProvider.of<AddtocartBloc>(context);
-    int counter = 1;
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -96,7 +95,7 @@ class AddToCart extends StatelessWidget {
                 SizedBox(
                   height: 15,
                 ),
-                itemOptions(context),
+                itemOptions(context, addtocartBloc),
                 SizedBox(
                   height: 20,
                 ),
@@ -114,8 +113,7 @@ class AddToCart extends StatelessWidget {
                           color: Colors.grey[600],
                         ),
                         onPressed: () {
-                          addtocartBloc.add(DecrementValue(value: counter));
-                          print(counter);
+                          addtocartBloc.add(DecrementValue());
                         },
                       ),
                     ),
@@ -128,31 +126,12 @@ class AddToCart extends StatelessWidget {
                       ),
                       child: Center(
                         child: BlocBuilder<AddtocartBloc, AddtocartState>(
-                            bloc: AddtocartBloc(),
-                            builder: (context, state) {
-                              if (state is AmountChanged) {
-                                return Text(
-                                  state.value.toString(),
-                                  style: TextStyle(
-                                    fontFamily: 'OpenSans',
-                                    color: Color(0xff353e5a),
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    fontStyle: FontStyle.normal,
-                                  ),
-                                );
-                              }
-                              return Text(
-                                addtocartBloc.value.toString(),
-                                style: TextStyle(
-                                  fontFamily: 'OpenSans',
-                                  color: Color(0xff353e5a),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  fontStyle: FontStyle.normal,
-                                ),
-                              );
-                            }),
+                          bloc: addtocartBloc,
+                          builder: (context, state) {
+                            return buildCounterText(
+                                addtocartBloc.value.toString());
+                          },
+                        ),
                       ),
                     ),
                     Container(
@@ -166,8 +145,7 @@ class AddToCart extends StatelessWidget {
                           color: Colors.grey[600],
                         ),
                         onPressed: () {
-                          addtocartBloc.add(IncrementValue(value: counter));
-                          print(counter);
+                          addtocartBloc.add(IncrementValue());
                         },
                       ),
                     ),
@@ -177,13 +155,15 @@ class AddToCart extends StatelessWidget {
                   height: 25,
                 ),
                 GestureDetector(
-                  onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=> CartPage()));
+                  onTap: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => CartPage()));
                   },
                   child: Container(
-                    width: 200,
+                    width: 270,
                     height: 52,
                     decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
                       gradient: LinearGradient(
                           stops: [0, 1],
                           begin: Alignment(-0.99, -0.10),
@@ -193,6 +173,12 @@ class AddToCart extends StatelessWidget {
                     child: Center(
                       child: Text(
                         'ADD TO CART',
+                        style: TextStyle(
+                          color: Color(0xffffffff),
+                          fontFamily: 'OpenSans',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),
@@ -208,15 +194,28 @@ class AddToCart extends StatelessWidget {
     );
   }
 
-  Widget itemOptions(BuildContext context) {
+  Widget buildCounterText(String text) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontFamily: 'OpenSans',
+        color: Color(0xff353e5a),
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+        fontStyle: FontStyle.normal,
+      ),
+    );
+  }
+
+  Widget itemOptions(BuildContext context, AddtocartBloc addtocartBloc) {
     return NeuCard(
       width: 310,
       height: 265,
-      bevel: 14,
-      curveType: CurveType.flat,
+      bevel: 12,
+      curveType: CurveType.convex,
       decoration: NeumorphicDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: Color(0xfff5f8ff),
+        color: Colors.grey[200],
         border: Border.all(color: Colors.white, width: 2),
       ),
       child: Column(
@@ -224,7 +223,11 @@ class AddToCart extends StatelessWidget {
           ListTile(
             contentPadding: EdgeInsets.only(left: 25, right: 25),
             title: Text("Size"),
-            subtitle: Text(item.size),
+            subtitle: BlocBuilder<AddtocartBloc, AddtocartState>(
+                bloc: addtocartBloc,
+                builder: (context, state) {
+                  return Text(addtocartBloc.item.size);
+                }),
             trailing: FloatingActionButton(
               elevation: 5,
               backgroundColor: Color(0xffffffff),
@@ -234,6 +237,7 @@ class AddToCart extends StatelessWidget {
                 color: Colors.grey[600],
               ),
               onPressed: () {
+                addtocartBloc.add(ChangeSize(item.size));
               },
             ),
           ),
@@ -244,7 +248,11 @@ class AddToCart extends StatelessWidget {
           ListTile(
             contentPadding: EdgeInsets.only(left: 25, right: 25),
             title: Text("Flavor"),
-            subtitle: Text(item.flavor),
+            subtitle: BlocBuilder<AddtocartBloc, AddtocartState>(
+                bloc: addtocartBloc,
+                builder: (context, state) {
+                  return Text(addtocartBloc.item.flavor);
+                }),
             trailing: FloatingActionButton(
               elevation: 5,
               backgroundColor: Color(0xffffffff),
@@ -253,7 +261,9 @@ class AddToCart extends StatelessWidget {
                 Icons.arrow_forward,
                 color: Colors.grey[600],
               ),
-              onPressed: () {},
+              onPressed: () {
+                addtocartBloc.add(ChangeFlavor(item.flavor));
+              },
             ),
           ),
           Padding(
@@ -263,7 +273,11 @@ class AddToCart extends StatelessWidget {
           ListTile(
             contentPadding: EdgeInsets.only(left: 25, right: 25),
             title: Text("Topping"),
-            subtitle: Text(item.topping),
+            subtitle: BlocBuilder<AddtocartBloc, AddtocartState>(
+                bloc: addtocartBloc,
+                builder: (context, state) {
+                  return Text(addtocartBloc.item.topping);
+                }),
             trailing: FloatingActionButton(
               elevation: 5,
               backgroundColor: Color(0xffffffff),
@@ -272,7 +286,9 @@ class AddToCart extends StatelessWidget {
                 Icons.arrow_forward,
                 color: Colors.grey[600],
               ),
-              onPressed: () {},
+              onPressed: () {
+                addtocartBloc.add(ChangeTopping(item.topping));
+              },
             ),
           )
         ],

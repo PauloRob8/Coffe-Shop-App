@@ -11,7 +11,7 @@ class AddToCartProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AddtocartBloc(),
+      create: (context) => AddtocartBloc(item),
       child: AddToCart(item: item,),
     );
   }

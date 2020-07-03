@@ -86,6 +86,7 @@ class _InitialPageState extends State<InitialPage> {
           onTap: (index) {
             if (index == 1) {
              _scaffoldKey.currentState.showSnackBar(SnackBar(
+               backgroundColor: Color(0xffeb7a27),
                content: Text("Tap on a item to add it to cart!",
                textAlign: TextAlign.center,
                style: TextStyle(

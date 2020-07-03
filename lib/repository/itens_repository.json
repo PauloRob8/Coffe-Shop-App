@@ -3,7 +3,7 @@
         "name": "Classic Latte",
         "type": "coffee",
         "image": "lib/assets/drawable-hdpi/coffe_cup.png",
-        "size": "small",
+        "size": "Small",
         "topping": "Wipped Cream",
         "flavor": "Caramel",
         "favorite": "true",
@@ -11,10 +11,10 @@
     },
 
     {
-        "name": "Classic Latte",
+        "name": "Classic Americano",
         "image": "lib/assets/drawable-hdpi/coffe_cup.png",
         "type":"coffee",
-        "size": "small",
+        "size": "Small",
         "topping": "Wipped Cream",
         "flavor": "Vannila",
         "favorite": "true",
@@ -22,23 +22,23 @@
     },
 
     {
-        "name": "Camomile Tea",
+        "name": "Iced Tea",
         "image": "lib/assets/drawable-hdpi/tea_cup.png",
         "type":"tea",
-        "size": "small",
+        "size": "Large",
         "topping": "None",
-        "flavor": "Caramel",
+        "flavor": "Lemon",
         "favorite": "false",
         "price": "4.50"
     },
 
     {
-        "name": "Iced Tea",
+        "name": "Hot Tea",
         "image": "lib/assets/drawable-hdpi/tea_cup.png",
         "type":"tea",
-        "size": "small",
-        "topping": "Wipped Cream",
-        "flavor": "Caramel",
+        "size": "Large",
+        "topping": "Aloe Vera",
+        "flavor": "Chamomile",
         "favorite": "false",
         "price": "4.50"
     },
@@ -46,8 +46,8 @@
         "name": "Iced Tea",
         "image": "lib/assets/drawable-hdpi/tea_cup.png",
         "type":"tea",
-        "size": "small",
-        "topping": "Wipped Cream",
+        "size": "Small",
+        "topping": "None",
         "flavor": "Caramel",
         "favorite": "false",
         "price": "4.50"

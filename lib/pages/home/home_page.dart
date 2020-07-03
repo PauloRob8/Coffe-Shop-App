@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
                               builder: (context, state) {
                                 if (state is HomeAllItens) {
                                   return GridView.count(
-                                    padding: EdgeInsets.only(top: 20),
+                                    padding: EdgeInsets.only(top: 20,left: 20,right: 20),
                                     shrinkWrap: true,
                                     physics: NeverScrollableScrollPhysics(),
                                     mainAxisSpacing: 15,
@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
                                     padding: EdgeInsets.only(top: 20),
                                     shrinkWrap: true,
                                     physics: NeverScrollableScrollPhysics(),
-                                    mainAxisSpacing: 15,
+                                    mainAxisSpacing: 25,
                                     crossAxisSpacing: 0,
                                     crossAxisCount: 2,
                                     childAspectRatio: 0.8,
@@ -233,10 +233,10 @@ class _HomePageState extends State<HomePage> {
             alignment: Alignment.topCenter,
             children: <Widget>[
               NeuCard(
-                width: 150,
+                width: 138,
                 height: 190,
-                bevel: 5,
-                curveType: CurveType.concave,
+                bevel: 2,
+                curveType: CurveType.emboss,
                 decoration: NeumorphicDecoration(
                   borderRadius: BorderRadius.circular(15),
                   border: Border.all(color: Colors.white54, width: 2),

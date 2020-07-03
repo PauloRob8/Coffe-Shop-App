@@ -9,32 +9,48 @@ class AddtocartInitial extends AddtocartState {
   List<Object> get props => [];
 }
 
+
 class AmountChanged extends AddtocartState{
   final int value;
 
   AmountChanged(this.value);
-
-  @override
-  List<Object> get props => [];
-
-}
-
-class ValueIncremented extends AddtocartState{
-  final int value;
-
-  ValueIncremented(this.value);
   
   @override
   List<Object> get props => [value];
   
 }
 
-class ValueDecremented extends AddtocartState{
-  final int value;
 
-  ValueDecremented(this.value);
+
+class SizeChanged extends AddtocartState{
+
+  final String size;
+
+  SizeChanged(this.size);
   
   @override
-  List<Object> get props => [value];
+  List<Object> get props => [size];
+
+}
+
+class FlavorChanged extends AddtocartState{
+
+  final String flavor;
+
+  FlavorChanged(this.flavor);
   
+  @override
+  List<Object> get props => [flavor];
+
+}
+
+class ToppingChanged extends AddtocartState{
+
+  final String topping;
+
+  ToppingChanged(this.topping);
+  
+  @override
+  List<Object> get props => [topping];
+
 }
