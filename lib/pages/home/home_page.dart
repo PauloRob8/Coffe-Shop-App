@@ -1,11 +1,20 @@
 import 'package:CoffeShopApp/models/item.dart';
+import 'package:CoffeShopApp/pages/AddToCart/add_to_cart_page.dart';
+import 'package:CoffeShopApp/pages/AddToCart/add_to_cart_provider.dart';
 import 'package:CoffeShopApp/pages/home/bloc/home_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:neumorphic/neumorphic.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
@@ -17,7 +26,7 @@ class HomePage extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: sideNavOptionsBar(size, homeBloc),
+              child: SingleChildScrollView(child: sideNavOptionsBar(size, homeBloc)),
             ),
             Expanded(
               child: Container(
@@ -65,7 +74,8 @@ class HomePage extends StatelessWidget {
                                     childAspectRatio: 0.8,
                                     children: List.generate(state.list.length,
                                         (index) {
-                                      return coffeShopItem(state.list[index]);
+                                      return coffeShopItem(
+                                          state.list[index], context);
                                     }),
                                   );
                                 } else if (state is HomeFilteredByCoffe) {
@@ -74,11 +84,13 @@ class HomePage extends StatelessWidget {
                                     shrinkWrap: true,
                                     physics: NeverScrollableScrollPhysics(),
                                     mainAxisSpacing: 15,
+                                    crossAxisSpacing: 0,
                                     crossAxisCount: 2,
                                     childAspectRatio: 0.8,
                                     children: List.generate(state.list.length,
                                         (index) {
-                                      return coffeShopItem(state.list[index]);
+                                      return coffeShopItem(
+                                          state.list[index], context);
                                     }),
                                   );
                                 } else if (state is HomeFilteredByTea) {
@@ -91,9 +103,12 @@ class HomePage extends StatelessWidget {
                                     childAspectRatio: 0.8,
                                     children: List.generate(state.list.length,
                                         (index) {
-                                      return coffeShopItem(state.list[index]);
+                                      return coffeShopItem(
+                                          state.list[index], context);
                                     }),
                                   );
+                                } else if (state is HomeLoading) {
+                                  return CircularProgressIndicator();
                                 }
                                 return Container();
                               }),
@@ -203,28 +218,29 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget coffeShopItem(Item item) {
+  Widget coffeShopItem(Item item, BuildContext context) {
     return Container(
-      child: Material(
+      child: GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => AddToCartProvider(item: item)));
+        },
+        child: Material(
           color: Color(0xffeff1fa),
           child: Stack(
             fit: StackFit.loose,
             overflow: Overflow.visible,
             alignment: Alignment.topCenter,
             children: <Widget>[
-              Container(
-                width: 140,
+              NeuCard(
+                width: 150,
                 height: 190,
-                decoration: BoxDecoration(
+                bevel: 5,
+                curveType: CurveType.concave,
+                decoration: NeumorphicDecoration(
                   borderRadius: BorderRadius.circular(15),
                   border: Border.all(color: Colors.white54, width: 2),
                   color: Color(0xffeff1fa),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color(0x0d7582a8),
-                      spreadRadius: -10,
-                    )
-                  ],
                 ),
               ),
               Positioned(
@@ -242,6 +258,7 @@ class HomePage extends StatelessWidget {
                         BoxShadow(
                           color: Color(0x57ec7f2f),
                           offset: Offset(0, 4),
+                          blurRadius: 20,
                           spreadRadius: 0,
                         )
                       ]),
@@ -268,14 +285,18 @@ class HomePage extends StatelessWidget {
                                 highlightColor: Colors.red,
                                 icon: Icon(Icons.favorite_border),
                                 onPressed: () {
-                                  print(item.favorite);
+                                  setState(() {
+                                    item.favorite = !item.favorite;
+                                  });
                                 },
                                 color: Color(0xff353e5a),
                               )
                             : IconButton(
                                 icon: Icon(Icons.favorite),
                                 onPressed: () {
-                                  print(item.favorite);
+                                  setState(() {
+                                    item.favorite = !item.favorite;
+                                  });
                                 },
                                 color: Colors.red[600],
                               ),
@@ -300,7 +321,14 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ],
-          )),
+          ),
+        ),
+      ),
     );
+  }
+
+  addItemToPrefs(String item) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString('item', item.toString());
   }
 }

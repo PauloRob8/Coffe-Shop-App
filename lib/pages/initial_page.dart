@@ -14,24 +14,28 @@ class InitialPage extends StatefulWidget {
 }
 
 class _InitialPageState extends State<InitialPage> {
-  PageController pageController;
+
+
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  PageController _pageController;
   int index = 0;
 
   @override
   void initState() {
     super.initState();
-    pageController = PageController();
+    _pageController = PageController();
   }
 
   @override
   void dispose() {
     super.dispose();
-    pageController.dispose();
+    _pageController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       bottomNavigationBar: Container(
         height: 75,
         decoration: BoxDecoration(
@@ -44,8 +48,8 @@ class _InitialPageState extends State<InitialPage> {
                   spreadRadius: 0)
             ],
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(15),
-              topRight: Radius.circular(15),
+              topLeft: Radius.circular(18),
+              topRight: Radius.circular(18),
             )),
         child: BottomNavigationBar(
           currentIndex: index,
@@ -81,13 +85,20 @@ class _InitialPageState extends State<InitialPage> {
           ],
           onTap: (index) {
             if (index == 1) {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => AddToCart()));
+             _scaffoldKey.currentState.showSnackBar(SnackBar(
+               content: Text("Tap on a item to add it to cart!",
+               textAlign: TextAlign.center,
+               style: TextStyle(
+                 fontFamily: 'OpenSans',
+                 fontWeight: FontWeight.w600,
+               ),
+               ),
+             ));
             } else {
               setState(() {
                 this.index = index;
               });
-              pageController.animateToPage(index,
+              _pageController.animateToPage(index,
                   duration: Duration(milliseconds: 400), curve: Curves.linear);
             }
           },
@@ -96,7 +107,7 @@ class _InitialPageState extends State<InitialPage> {
       body: SafeArea(
         child: PageView(
           physics: NeverScrollableScrollPhysics(),
-          controller: pageController,
+          controller: _pageController,
           children: <Widget>[
             BlocProvider<HomeBloc>(
               create: (context) => HomeBloc(Repository())..add(AppStarted()),
