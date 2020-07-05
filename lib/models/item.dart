@@ -24,4 +24,15 @@ class Item{
       topping: json['topping'],
     );
   }
+
+  Map<String,dynamic> toJson()=> {
+    "name": name,
+    "type": type,
+    "image": image,
+    "size": size,
+    "topping": topping,
+    "flavor": flavor,
+    "favorite": favorite.toString(),
+    "price": price.toString(),
+  };
 }

@@ -36,6 +36,7 @@ class _InitialPageState extends State<InitialPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+      backgroundColor: Color(0xffeff1fa),
       bottomNavigationBar: Container(
         height: 75,
         decoration: BoxDecoration(
@@ -48,8 +49,8 @@ class _InitialPageState extends State<InitialPage> {
                   spreadRadius: 0)
             ],
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(18),
-              topRight: Radius.circular(18),
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
             )),
         child: BottomNavigationBar(
           currentIndex: index,
@@ -99,8 +100,7 @@ class _InitialPageState extends State<InitialPage> {
               setState(() {
                 this.index = index;
               });
-              _pageController.animateToPage(index,
-                  duration: Duration(milliseconds: 400), curve: Curves.linear);
+              _pageController.jumpToPage(index);
             }
           },
         ),

@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:icon_shadow/icon_shadow.dart';
 import 'package:neumorphic/neumorphic.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,7 +27,8 @@ class _HomePageState extends State<HomePage> {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: SingleChildScrollView(child: sideNavOptionsBar(size, homeBloc)),
+              child: SingleChildScrollView(
+                  child: sideNavOptionsBar(size, homeBloc)),
             ),
             Expanded(
               child: Container(
@@ -65,48 +67,11 @@ class _HomePageState extends State<HomePage> {
                               bloc: homeBloc,
                               builder: (context, state) {
                                 if (state is HomeAllItens) {
-                                  return GridView.count(
-                                    padding: EdgeInsets.only(top: 20,left: 20,right: 20),
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    mainAxisSpacing: 15,
-                                    crossAxisCount: 2,
-                                    childAspectRatio: 0.8,
-                                    children: List.generate(state.list.length,
-                                        (index) {
-                                      return coffeShopItem(
-                                          state.list[index], context);
-                                    }),
-                                  );
+                                  return buildGridView(state.list);
                                 } else if (state is HomeFilteredByCoffe) {
-                                  return GridView.count(
-                                    padding: EdgeInsets.only(top: 20),
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    mainAxisSpacing: 25,
-                                    crossAxisSpacing: 0,
-                                    crossAxisCount: 2,
-                                    childAspectRatio: 0.8,
-                                    children: List.generate(state.list.length,
-                                        (index) {
-                                      return coffeShopItem(
-                                          state.list[index], context);
-                                    }),
-                                  );
+                                  return buildGridView(state.list);
                                 } else if (state is HomeFilteredByTea) {
-                                  return GridView.count(
-                                    padding: EdgeInsets.only(top: 20),
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    mainAxisSpacing: 15,
-                                    crossAxisCount: 2,
-                                    childAspectRatio: 0.8,
-                                    children: List.generate(state.list.length,
-                                        (index) {
-                                      return coffeShopItem(
-                                          state.list[index], context);
-                                    }),
-                                  );
+                                  return buildGridView(state.list);
                                 } else if (state is HomeLoading) {
                                   return CircularProgressIndicator();
                                 }
@@ -129,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                       },
                       blendMode: BlendMode.dstIn,
                       child: Container(
-                        height: 75,
+                        height: 70,
                         color: Color(0xffeff1fa),
                       ),
                     ),
@@ -218,6 +183,20 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Widget buildGridView(List<Item> list) {
+    return GridView.count(
+      padding: EdgeInsets.only(top: 20, right: 5, left: 5),
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      mainAxisSpacing: 15,
+      crossAxisCount: 2,
+      childAspectRatio: 0.8,
+      children: List.generate(list.length, (index) {
+        return coffeShopItem(list[index], context);
+      }),
+    );
+  }
+
   Widget coffeShopItem(Item item, BuildContext context) {
     return Container(
       child: GestureDetector(
@@ -236,11 +215,11 @@ class _HomePageState extends State<HomePage> {
                 width: 138,
                 height: 190,
                 bevel: 2,
-                curveType: CurveType.emboss,
+                curveType: CurveType.concave,
                 decoration: NeumorphicDecoration(
                   borderRadius: BorderRadius.circular(15),
                   border: Border.all(color: Colors.white54, width: 2),
-                  color: Color(0xffeff1fa),
+                  color: Color(0xfff6f6fb),
                 ),
               ),
               Positioned(
@@ -292,7 +271,14 @@ class _HomePageState extends State<HomePage> {
                                 color: Color(0xff353e5a),
                               )
                             : IconButton(
-                                icon: Icon(Icons.favorite),
+                                icon: IconShadowWidget(
+                                  Icon(
+                                    Icons.favorite,
+                                    color: Colors.red,
+                                  ),
+                                  showShadow: true,
+                                  shadowColor: Colors.red.shade500,
+                                ),
                                 onPressed: () {
                                   setState(() {
                                     item.favorite = !item.favorite;
@@ -325,10 +311,5 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
-  }
-
-  addItemToPrefs(String item) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString('item', item.toString());
   }
 }

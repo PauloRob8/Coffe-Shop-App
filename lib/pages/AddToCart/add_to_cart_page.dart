@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:CoffeShopApp/models/item.dart';
 import 'package:CoffeShopApp/pages/AddToCart/bloc/addtocart_bloc.dart';
 import 'package:CoffeShopApp/pages/Cart/cart_page.dart';
@@ -12,12 +14,14 @@ class AddToCart extends StatelessWidget {
   AddToCart({this.item});
   @override
   Widget build(BuildContext context) {
+    final _scaffoldKey = GlobalKey<ScaffoldState>();
     final AddtocartBloc addtocartBloc = BlocProvider.of<AddtocartBloc>(context);
     return Scaffold(
+      key: _scaffoldKey,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
-            color: Color(0xfff5f8ff),
+            color: Color(0xffeff1fa),
             child: Column(
               children: <Widget>[
                 Container(
@@ -156,8 +160,22 @@ class AddToCart extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => CartPage()));
+                    addItemToPrefs(item,addtocartBloc);
+                    _scaffoldKey.currentState.showSnackBar(SnackBar(
+                      content: Text(
+                        "Item added to your cart!",
+                        style: TextStyle(
+                          fontFamily: 'OpenSans',
+                          fontWeight: FontWeight.w600,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      backgroundColor: Color(0xffeb7a27),
+                      duration: Duration(seconds: 1),
+                    ));
+                    Future.delayed(
+                      Duration(milliseconds: 1500),
+                    ).then((value) => Navigator.of(context).pop());
                   },
                   child: Container(
                     width: 270,
@@ -211,22 +229,38 @@ class AddToCart extends StatelessWidget {
     return NeuCard(
       width: 310,
       height: 265,
-      bevel: 12,
-      curveType: CurveType.convex,
+      bevel: 5,
+      curveType: CurveType.concave,
       decoration: NeumorphicDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: Colors.grey[200],
-        border: Border.all(color: Colors.white, width: 2),
+        color: Color(0xffeff1fa),
+        border: Border.all(color: Colors.white, width: 0.8),
       ),
       child: Column(
         children: <Widget>[
           ListTile(
             contentPadding: EdgeInsets.only(left: 25, right: 25),
-            title: Text("Size"),
+            title: Text(
+              "Size",
+              style: TextStyle(
+                fontFamily: 'OpenSans',
+                color: Color(0xff353e5a),
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
             subtitle: BlocBuilder<AddtocartBloc, AddtocartState>(
                 bloc: addtocartBloc,
                 builder: (context, state) {
-                  return Text(addtocartBloc.item.size);
+                  return Text(
+                    addtocartBloc.item.size,
+                    style: TextStyle(
+                      fontFamily: 'OpenSans',
+                      color: Color(0xffacb5d3),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  );
                 }),
             trailing: FloatingActionButton(
               elevation: 5,
@@ -247,11 +281,27 @@ class AddToCart extends StatelessWidget {
           ),
           ListTile(
             contentPadding: EdgeInsets.only(left: 25, right: 25),
-            title: Text("Flavor"),
+            title: Text(
+              "Flavor",
+              style: TextStyle(
+                fontFamily: 'OpenSans',
+                color: Color(0xff353e5a),
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
             subtitle: BlocBuilder<AddtocartBloc, AddtocartState>(
                 bloc: addtocartBloc,
                 builder: (context, state) {
-                  return Text(addtocartBloc.item.flavor);
+                  return Text(
+                    addtocartBloc.item.flavor,
+                    style: TextStyle(
+                      fontFamily: 'OpenSans',
+                      color: Color(0xffacb5d3),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  );
                 }),
             trailing: FloatingActionButton(
               elevation: 5,
@@ -272,11 +322,27 @@ class AddToCart extends StatelessWidget {
           ),
           ListTile(
             contentPadding: EdgeInsets.only(left: 25, right: 25),
-            title: Text("Topping"),
+            title: Text(
+              "Topping",
+              style: TextStyle(
+                fontFamily: 'OpenSans',
+                color: Color(0xff353e5a),
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
             subtitle: BlocBuilder<AddtocartBloc, AddtocartState>(
                 bloc: addtocartBloc,
                 builder: (context, state) {
-                  return Text(addtocartBloc.item.topping);
+                  return Text(
+                    addtocartBloc.item.topping,
+                    style: TextStyle(
+                      fontFamily: 'OpenSans',
+                      color: Color(0xffacb5d3),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  );
                 }),
             trailing: FloatingActionButton(
               elevation: 5,
@@ -296,9 +362,11 @@ class AddToCart extends StatelessWidget {
     );
   }
 
-  getItemFromPrefs() async {
+  addItemToPrefs(Item item,AddtocartBloc addtocartBloc) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    String item = preferences.getString('item');
-    return item as Item;
+    String jsonStringItem = json.encode(item);
+    await preferences.setString('item', jsonStringItem);
+    await preferences.setString('amount', addtocartBloc.value.toString());
+    
   }
 }

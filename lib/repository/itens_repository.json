@@ -7,29 +7,39 @@
         "topping": "Wipped Cream",
         "flavor": "Caramel",
         "favorite": "true",
-        "price": "4.50"
+        "price": "2.50"
     },
 
     {
         "name": "Classic Americano",
-        "image": "lib/assets/drawable-hdpi/coffe_cup.png",
+        "image": "lib/assets/drawable-hdpi/coffee_cup3.png",
         "type":"coffee",
         "size": "Small",
         "topping": "Wipped Cream",
         "flavor": "Vannila",
         "favorite": "true",
-        "price": "4.50"
+        "price": "3.50"
     },
 
     {
-        "name": "Iced Tea",
-        "image": "lib/assets/drawable-hdpi/tea_cup.png",
-        "type":"tea",
+        "name": "Espresso",
+        "image": "lib/assets/drawable-hdpi/coffe_cup1.png",
+        "type":"coffee",
         "size": "Large",
         "topping": "None",
-        "flavor": "Lemon",
+        "flavor": "Caramel",
         "favorite": "false",
         "price": "4.50"
+    },
+    {
+        "name": "Cappuccino",
+        "image": "lib/assets/drawable-hdpi/coffee_cup2.png",
+        "type":"coffee",
+        "size": "Large",
+        "topping": "None",
+        "flavor": "Caramel",
+        "favorite": "false",
+        "price": "5.00"
     },
 
     {
