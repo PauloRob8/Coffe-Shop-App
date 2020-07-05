@@ -1,21 +1,29 @@
-import 'dart:convert';
-
 import 'package:CoffeShopApp/models/item.dart';
 import 'package:CoffeShopApp/pages/AddToCart/bloc/addtocart_bloc.dart';
-import 'package:CoffeShopApp/pages/Cart/cart_page.dart';
+
+import 'package:CoffeShopApp/pages/Cart/cubit/cart_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_cubit/flutter_cubit.dart';
 import 'package:neumorphic/neumorphic.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class AddToCart extends StatelessWidget {
+class AddToCart extends StatefulWidget {
   final Item item;
   AddToCart({this.item});
+
+  @override
+  _AddToCartState createState() => _AddToCartState();
+}
+
+class _AddToCartState extends State<AddToCart> {
+  CartCubit get cartCubit => CubitProvider.of<CartCubit>(context);
+  AddtocartBloc get addtocartBloc => BlocProvider.of<AddtocartBloc>(context);
+
   @override
   Widget build(BuildContext context) {
     final _scaffoldKey = GlobalKey<ScaffoldState>();
-    final AddtocartBloc addtocartBloc = BlocProvider.of<AddtocartBloc>(context);
+
     return Scaffold(
       key: _scaffoldKey,
       body: SafeArea(
@@ -63,7 +71,7 @@ class AddToCart extends StatelessWidget {
                     ),
                     Container(
                       child: Image.asset(
-                        item.image,
+                        widget.item.image,
                       ),
                       color: Colors.transparent,
                     )
@@ -73,7 +81,7 @@ class AddToCart extends StatelessWidget {
                   height: 30,
                 ),
                 Text(
-                  item.name,
+                  widget.item.name,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontFamily: 'AbrilFatFace',
@@ -87,7 +95,7 @@ class AddToCart extends StatelessWidget {
                   height: 15,
                 ),
                 Text(
-                  '\$ ${item.price.toStringAsFixed(2)}',
+                  '\$ ${widget.item.price.toStringAsFixed(2)}',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontFamily: 'OpenSans',
@@ -160,7 +168,9 @@ class AddToCart extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    addItemToPrefs(item,addtocartBloc);
+                    addItemToPrefs(
+                      widget.item,
+                    );
                     _scaffoldKey.currentState.showSnackBar(SnackBar(
                       content: Text(
                         "Item added to your cart!",
@@ -271,7 +281,7 @@ class AddToCart extends StatelessWidget {
                 color: Colors.grey[600],
               ),
               onPressed: () {
-                addtocartBloc.add(ChangeSize(item.size));
+                addtocartBloc.add(ChangeSize(widget.item.size));
               },
             ),
           ),
@@ -312,7 +322,7 @@ class AddToCart extends StatelessWidget {
                 color: Colors.grey[600],
               ),
               onPressed: () {
-                addtocartBloc.add(ChangeFlavor(item.flavor));
+                addtocartBloc.add(ChangeFlavor(widget.item.flavor));
               },
             ),
           ),
@@ -353,7 +363,7 @@ class AddToCart extends StatelessWidget {
                 color: Colors.grey[600],
               ),
               onPressed: () {
-                addtocartBloc.add(ChangeTopping(item.topping));
+                addtocartBloc.add(ChangeTopping(widget.item.topping));
               },
             ),
           )
@@ -362,11 +372,8 @@ class AddToCart extends StatelessWidget {
     );
   }
 
-  addItemToPrefs(Item item,AddtocartBloc addtocartBloc) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    String jsonStringItem = json.encode(item);
-    await preferences.setString('item', jsonStringItem);
-    await preferences.setString('amount', addtocartBloc.value.toString());
-    
+  addItemToPrefs(Item item) {
+    item.price = item.price * addtocartBloc.value;
+    cartCubit.addItemToCart(item);
   }
 }

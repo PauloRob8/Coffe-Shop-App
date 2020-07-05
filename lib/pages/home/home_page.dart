@@ -1,14 +1,11 @@
 import 'package:CoffeShopApp/models/item.dart';
-import 'package:CoffeShopApp/pages/AddToCart/add_to_cart_page.dart';
 import 'package:CoffeShopApp/pages/AddToCart/add_to_cart_provider.dart';
 import 'package:CoffeShopApp/pages/home/bloc/home_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:icon_shadow/icon_shadow.dart';
 import 'package:neumorphic/neumorphic.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -66,14 +63,12 @@ class _HomePageState extends State<HomePage> {
                           BlocBuilder<HomeBloc, HomeState>(
                               bloc: homeBloc,
                               builder: (context, state) {
-                                if (state is HomeAllItens) {
-                                  return buildGridView(state.list);
-                                } else if (state is HomeFilteredByCoffe) {
-                                  return buildGridView(state.list);
-                                } else if (state is HomeFilteredByTea) {
-                                  return buildGridView(state.list);
+                                if (state is FilteredItems) {
+                                  return buildGridView(state.items);
                                 } else if (state is HomeLoading) {
-                                  return CircularProgressIndicator();
+                                  return Center(
+                                    child: CircularProgressIndicator(),
+                                  );
                                 }
                                 return Container();
                               }),
@@ -124,12 +119,9 @@ class _HomePageState extends State<HomePage> {
         child: BlocBuilder<HomeBloc, HomeState>(
             bloc: homeBloc,
             builder: (context, state) {
-              if (state is HomeAllItens) {
-                return filterButtons([false, false, true], homeBloc);
-              } else if (state is HomeFilteredByCoffe) {
-                return filterButtons([false, true, false], homeBloc);
-              } else if (state is HomeFilteredByTea) {
-                return filterButtons([true, false, false], homeBloc);
+              print(state);
+              if (state is FilteredItems) {
+                return filterButtons(state.currentIndex, homeBloc);
               }
               return Container();
             }),
@@ -137,13 +129,15 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget filterButtons(List<bool> selectedList, HomeBloc bloc) {
+  Widget filterButtons(int currentIndex, HomeBloc bloc) {
+    final selectedItems =
+        List.generate(3, (index) => index == currentIndex ? true : false);
     return ToggleButtons(
       fillColor: Colors.transparent,
+      color: Color(0xff828eb4),
       selectedColor: Color(0xffeb7a27),
-      disabledColor: Color(0xff828eb4),
       renderBorder: false,
-      isSelected: selectedList,
+      isSelected: selectedItems,
       onPressed: (int index) {
         bloc.add(ChangePageFilter(index: index));
       },

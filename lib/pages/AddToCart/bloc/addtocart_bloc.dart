@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:CoffeShopApp/models/item.dart';
-import 'package:CoffeShopApp/pages/addToCart/bloc/addtocart_bloc.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -9,10 +8,7 @@ part 'addtocart_event.dart';
 part 'addtocart_state.dart';
 
 class AddtocartBloc extends Bloc<AddtocartEvent, AddtocartState> {
-  AddtocartBloc(this.item);
-
-  @override
-  AddtocartState get initialState => AddtocartInitial();
+  AddtocartBloc(this.item): super(AddtocartInitial());
 
   int value = 1;
   final Item item;

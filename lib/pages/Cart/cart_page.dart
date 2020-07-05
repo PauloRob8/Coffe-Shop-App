@@ -1,15 +1,27 @@
-import 'dart:convert';
-
 import 'package:CoffeShopApp/models/item.dart';
+import 'package:CoffeShopApp/pages/Cart/cubit/cart_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cubit/flutter_cubit.dart';
 import 'package:icon_shadow/icon_shadow.dart';
 import 'package:neumorphic/neumorphic.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class CartPage extends StatelessWidget {
+class CartPage extends StatefulWidget {
+  final VoidCallback returnToHome;
+
+  const CartPage({Key key, this.returnToHome}) : super(key: key);
+
+  @override
+  _CartPageState createState() => _CartPageState();
+}
+
+class _CartPageState extends State<CartPage> {
+  CartCubit get cartCubit => CubitProvider.of<CartCubit>(context);
+
   @override
   Widget build(BuildContext context) {
     Item item;
+
     final _scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
       key: _scaffoldKey,
@@ -38,79 +50,77 @@ class CartPage extends StatelessWidget {
                 ),
               ],
             ),
-            Container(
-              margin: EdgeInsets.only(bottom: 15),
-              child: Center(
-                child: Text(
-                  "Your Orders",
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    fontFamily: 'AbrilFatFace',
-                    color: Color(0xff353e5a),
-                    fontSize: 33,
-                    fontWeight: FontWeight.w400,
-                    fontStyle: FontStyle.normal,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            FutureBuilder(
-                future: getItemFromPrefs(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    if (snapshot.data == "No item found") {
-                      return Container(
-                          height: 175,
-                          child: Center(
-                              child: Text(
-                            "No items on the cart",
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(bottom: 15),
+                      child: Center(
+                        child: Text(
+                          "Your Orders",
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            fontFamily: 'AbrilFatFace',
+                            color: Color(0xff353e5a),
+                            fontSize: 33,
+                            fontWeight: FontWeight.w400,
+                            fontStyle: FontStyle.normal,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    CubitBuilder<CartCubit, CartState>(
+                        builder: (context, state) {
+                      if (state.list.isEmpty) {
+                        return Container(
+                            height: 100,
+                            child: Center(
+                                child: Text(
+                              "No items on the cart",
+                              style: TextStyle(
+                                fontFamily: 'OpenSans',
+                                color: Color(0xff353e5a),
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            )));
+                      } else {
+                        final itemList = state.list
+                            .map((item) => buildItemCard(item))
+                            .toList();
+                        return Column(
+                          children: <Widget>[
+                            ...itemList,
+                          ],
+                        );
+                      }
+                    }),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Container(
+                      width: 120,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            "Total",
                             style: TextStyle(
                               fontFamily: 'OpenSans',
                               color: Color(0xff353e5a),
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
                             ),
-                          )));
-                    } else {
-                      Map mapItem = json.decode(snapshot.data);
-                      item = Item.fromJson(mapItem);
-                      return buildItemCard(item);
-                    }
-                  }
-                  return Container();
-                }),
-            SizedBox(
-              height: 160,
-            ),
-            Container(
-              width: 120,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    "Total",
-                    style: TextStyle(
-                      fontFamily: 'OpenSans',
-                      color: Color(0xff353e5a),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  FutureBuilder(
-                      future: getAmountOfItens(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          if (snapshot.data == "0") {
-                            return Text("\$ 0.0");
-                          } else {
+                          ),
+                          CubitBuilder<CartCubit, CartState>(
+                              builder: (context, state) {
                             return Text(
-                              "\$" +
-                                  (int.parse(snapshot.data) * item.price)
-                                      .toStringAsFixed(2),
+                              "\$" + (cartCubit.getPrice.toStringAsFixed(2)),
                               style: TextStyle(
                                 fontFamily: 'OpenSans',
                                 color: Color(0xff353e5a),
@@ -118,53 +128,61 @@ class CartPage extends StatelessWidget {
                                 fontWeight: FontWeight.w700,
                               ),
                             );
-                          }
-                        }
-                        return Container();
-                      }),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 25,
-            ),
-            GestureDetector(
-              onTap: () {
-                checkout();
-                _scaffoldKey.currentState.showSnackBar(SnackBar(
-                  content: Text(
-                    "Success! Enjoy your Drink :)",
-                    style: TextStyle(
-                      fontFamily: 'OpenSans',
-                      fontWeight: FontWeight.w600,
+                          }),
+                        ],
+                      ),
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                  backgroundColor: Color(0xffeb7a27),
-                  duration: Duration(seconds: 1),
-                ),);
-              },
-              child: Container(
-                width: 270,
-                height: 52,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  gradient: LinearGradient(
-                      stops: [0, 1],
-                      begin: Alignment(-0.99, -0.10),
-                      end: Alignment(0.99, 0.10),
-                      colors: [Color(0xfff6aa74), Color(0xffeb7a27)]),
-                ),
-                child: Center(
-                  child: Text(
-                    'CHECKOUT',
-                    style: TextStyle(
-                      color: Color(0xffffffff),
-                      fontFamily: 'OpenSans',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                    SizedBox(
+                      height: 25,
                     ),
-                  ),
+                    GestureDetector(
+                      onTap: () {
+                        checkout();
+                        _scaffoldKey.currentState.showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              "Success! Enjoy your Drink :)",
+                              style: TextStyle(
+                                fontFamily: 'OpenSans',
+                                fontWeight: FontWeight.w600,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            backgroundColor: Color(0xffeb7a27),
+                            duration: Duration(seconds: 1),
+                          ),
+                        );
+                        Future.delayed(Duration(milliseconds: 1200))
+                            .then((value) => widget.returnToHome());
+                      },
+                      child: Container(
+                        width: 270,
+                        height: 52,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25),
+                          gradient: LinearGradient(
+                              stops: [0, 1],
+                              begin: Alignment(-0.99, -0.10),
+                              end: Alignment(0.99, 0.10),
+                              colors: [Color(0xfff6aa74), Color(0xffeb7a27)]),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'CHECKOUT',
+                            style: TextStyle(
+                              color: Color(0xffffffff),
+                              fontFamily: 'OpenSans',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -176,6 +194,7 @@ class CartPage extends StatelessWidget {
 
   Widget buildItemCard(Item item) {
     return Container(
+      margin: EdgeInsets.symmetric(vertical: 23),
       child: Stack(
         fit: StackFit.loose,
         overflow: Overflow.visible,
@@ -348,33 +367,15 @@ class CartPage extends StatelessWidget {
           Positioned(
             bottom: 30,
             left: 25,
-            child: FutureBuilder(
-                future: getAmountOfItens(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    if (snapshot.data != "1" && snapshot.data != "0") {
-                      return Text(
-                        '\$ ${item.price.toStringAsFixed(2)}  x${snapshot.data}',
-                        style: TextStyle(
-                          fontFamily: 'OpenSans',
-                          color: Color(0xff353e5a),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      );
-                    }
-                    return Text(
-                      '\$ ${item.price.toStringAsFixed(2)}',
-                      style: TextStyle(
-                        fontFamily: 'OpenSans',
-                        color: Color(0xff353e5a),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    );
-                  }
-                  return Container();
-                }),
+            child: Text(
+              '\$ ${item.price.toStringAsFixed(2)}',
+              style: TextStyle(
+                fontFamily: 'OpenSans',
+                color: Color(0xff353e5a),
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ),
           Positioned(
             bottom: 15,
@@ -402,18 +403,6 @@ class CartPage extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  getItemFromPrefs() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    String jsonString = preferences.getString('item') ?? 'No item found';
-    return jsonString;
-  }
-
-  getAmountOfItens() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    String amount = preferences.getString('amount') ?? "0";
-    return amount;
   }
 
   checkout() async {

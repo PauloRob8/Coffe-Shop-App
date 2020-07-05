@@ -11,14 +11,17 @@ class HomeInitial extends HomeState {
   List<Object> get props => [];
 }
 
-class HomeFilterChanged extends HomeState{
+class FilteredItems extends HomeState{
   final int currentIndex;
-
-  const HomeFilterChanged(this.currentIndex);
+  final List<Item> items;
+  const FilteredItems(this.currentIndex,this.items);
   
   @override
-  List<Object> get props => [currentIndex];
+  List<Object> get props => [currentIndex,items];
 
+  @override
+  String toString() => "$currentIndex\n$items";
+  
 }
 
 class HomeAllItens extends HomeState{
@@ -33,23 +36,6 @@ class HomeLoading extends HomeState{
   const HomeLoading();
   @override
   List<Object> get props => [];
-
-}
-
-class HomeFilteredByCoffe extends HomeState{
-  final List<Item> list;
-  
-  const HomeFilteredByCoffe(this.list);
-  @override
-  List<Object> get props => [list];
-}
-
-class HomeFilteredByTea extends HomeState{
-  final List<Item> list;
-  const HomeFilteredByTea(this.list);
-  
-  @override
-  List<Object> get props => [list];
 
 }
 

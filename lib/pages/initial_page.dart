@@ -1,4 +1,3 @@
-import 'package:CoffeShopApp/pages/AddToCart/add_to_cart_page.dart';
 import 'package:CoffeShopApp/pages/Cart/cart_page.dart';
 import 'package:CoffeShopApp/repository/repository.dart';
 import 'package:flutter/cupertino.dart';
@@ -111,13 +110,19 @@ class _InitialPageState extends State<InitialPage> {
           controller: _pageController,
           children: <Widget>[
             BlocProvider<HomeBloc>(
-              create: (context) => HomeBloc(Repository())..add(AppStarted()),
+              create: (context) => HomeBloc(Repository()),
               child: HomePage(),
             ),
-            CartPage(),
+            CartPage(returnToHome: returnToHome,),
           ],
         ),
       ),
     );
+  }
+  void returnToHome(){
+    setState(() {
+      this.index = 0;
+    });
+    _pageController.jumpToPage(0);
   }
 }
