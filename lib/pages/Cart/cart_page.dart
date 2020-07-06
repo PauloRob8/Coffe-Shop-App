@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cubit/flutter_cubit.dart';
 import 'package:icon_shadow/icon_shadow.dart';
 import 'package:neumorphic/neumorphic.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CartPage extends StatefulWidget {
   final VoidCallback returnToHome;
@@ -20,8 +19,6 @@ class _CartPageState extends State<CartPage> {
 
   @override
   Widget build(BuildContext context) {
-    Item item;
-
     final _scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
       key: _scaffoldKey,
@@ -35,8 +32,7 @@ class _CartPageState extends State<CartPage> {
                 Container(
                   width: 130,
                   height: 130,
-                  child:
-                      Image.asset('lib/assets/drawable-hdpi/Profile pic.png'),
+                  child: Image.asset('assets/drawable-hdpi/Profile pic.png'),
                 ),
                 Container(
                   margin: EdgeInsets.only(
@@ -74,31 +70,32 @@ class _CartPageState extends State<CartPage> {
                       height: 30,
                     ),
                     CubitBuilder<CartCubit, CartState>(
+                        cubit: cartCubit,
                         builder: (context, state) {
-                      if (state.list.isEmpty) {
-                        return Container(
-                            height: 100,
-                            child: Center(
-                                child: Text(
-                              "No items on the cart",
-                              style: TextStyle(
-                                fontFamily: 'OpenSans',
-                                color: Color(0xff353e5a),
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            )));
-                      } else {
-                        final itemList = state.list
-                            .map((item) => buildItemCard(item))
-                            .toList();
-                        return Column(
-                          children: <Widget>[
-                            ...itemList,
-                          ],
-                        );
-                      }
-                    }),
+                          if (state.list.isEmpty) {
+                            return Container(
+                                height: 150,
+                                child: Center(
+                                    child: Text(
+                                  "No items on the cart",
+                                  style: TextStyle(
+                                    fontFamily: 'OpenSans',
+                                    color: Color(0xff353e5a),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                )));
+                          } else {
+                            final itemList = state.list
+                                .map((item) => buildItemCard(item))
+                                .toList();
+                            return Column(
+                              children: <Widget>[
+                                ...itemList,
+                              ],
+                            );
+                          }
+                        }),
                     SizedBox(
                       height: 30,
                     ),
@@ -118,17 +115,19 @@ class _CartPageState extends State<CartPage> {
                             ),
                           ),
                           CubitBuilder<CartCubit, CartState>(
+                              cubit: cartCubit,
                               builder: (context, state) {
-                            return Text(
-                              "\$" + (cartCubit.getPrice.toStringAsFixed(2)),
-                              style: TextStyle(
-                                fontFamily: 'OpenSans',
-                                color: Color(0xff353e5a),
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            );
-                          }),
+                                return Text(
+                                  "\$" +
+                                      (cartCubit.getPrice.toStringAsFixed(2)),
+                                  style: TextStyle(
+                                    fontFamily: 'OpenSans',
+                                    color: Color(0xff353e5a),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                );
+                              }),
                         ],
                       ),
                     ),
@@ -137,7 +136,6 @@ class _CartPageState extends State<CartPage> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        checkout();
                         _scaffoldKey.currentState.showSnackBar(
                           SnackBar(
                             content: Text(
@@ -153,7 +151,10 @@ class _CartPageState extends State<CartPage> {
                           ),
                         );
                         Future.delayed(Duration(milliseconds: 1200))
-                            .then((value) => widget.returnToHome());
+                            .then((value) {
+                          cartCubit.checkout();
+                          widget.returnToHome();
+                        });
                       },
                       child: Container(
                         width: 270,
@@ -403,10 +404,5 @@ class _CartPageState extends State<CartPage> {
         ],
       ),
     );
-  }
-
-  checkout() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    await preferences.clear();
   }
 }

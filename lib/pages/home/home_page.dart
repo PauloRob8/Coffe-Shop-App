@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                       width: 130,
                       height: 130,
                       child: Image.asset(
-                          'lib/assets/drawable-hdpi/Profile pic.png'),
+                          'assets/drawable-hdpi/Profile pic.png'),
                     ),
                   ],
                 ),
@@ -119,7 +119,6 @@ class _HomePageState extends State<HomePage> {
         child: BlocBuilder<HomeBloc, HomeState>(
             bloc: homeBloc,
             builder: (context, state) {
-              print(state);
               if (state is FilteredItems) {
                 return filterButtons(state.currentIndex, homeBloc);
               }

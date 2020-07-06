@@ -60,7 +60,7 @@ class _InitialPageState extends State<InitialPage> {
           showUnselectedLabels: false,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-                icon: Icon(Icons.home),
+                icon: ImageIcon(AssetImage('assets/drawable-hdpi/home.png'),size: 24,),
                 title: Text(
                   "HOME",
                   style: TextStyle(
@@ -70,7 +70,7 @@ class _InitialPageState extends State<InitialPage> {
                     fontStyle: FontStyle.normal,
                   ),
                 )),
-            BottomNavigationBarItem(title: Text("Add"), icon: Icon(Icons.add)),
+            BottomNavigationBarItem(title: Text("Add"), icon: ImageIcon(AssetImage('assets/drawable-hdpi/add.png'),size: 24,)),
             BottomNavigationBarItem(
                 title: Text(
                   "CART",
@@ -81,7 +81,7 @@ class _InitialPageState extends State<InitialPage> {
                     fontStyle: FontStyle.normal,
                   ),
                 ),
-                icon: Icon(Icons.shopping_cart)),
+                icon: ImageIcon(AssetImage('assets/drawable-hdpi/cart.png'),size: 24,)),
           ],
           onTap: (index) {
             if (index == 1) {

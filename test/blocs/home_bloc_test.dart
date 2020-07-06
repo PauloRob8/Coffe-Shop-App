@@ -56,7 +56,7 @@ void main() {
   });
 
   test('Bloc should emit a Item List with the tea filter', () async {
-    //Delay to avoid the override of events
+    //Delay to avoid the override of states
     Future.delayed(Duration(milliseconds: 500)).then((value) => homeBloc.changeFilter(HomeTabs.tea.index));
     await expectLater(
         homeBloc,
@@ -70,7 +70,7 @@ void main() {
   });
 
   test('Bloc should emit a liked state', () async {
-    //Delay to avoid the override of events
+    //Delay to avoid the override of states
     Future.delayed(Duration(milliseconds: 500)).then((value) => homeBloc.add(LikeItem(true)));
     await expectLater(
         homeBloc,

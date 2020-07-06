@@ -19,7 +19,7 @@ void main() {
       {
         "name": "Classic Latte",
         "type": "coffee",
-        "image": "lib/assets/drawable-hdpi/coffe_cup.png",
+        "image": "assets/drawable-hdpi/coffe_cup.png",
         "size": "Small",
         "topping": "Wipped Cream",
         "flavor": "Caramel",

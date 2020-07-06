@@ -2,7 +2,7 @@
     {
         "name": "Classic Latte",
         "type": "coffee",
-        "image": "lib/assets/drawable-hdpi/coffe_cup.png",
+        "image": "assets/drawable-hdpi/coffe_cup.png",
         "size": "Small",
         "topping": "Wipped Cream",
         "flavor": "Caramel",
@@ -12,7 +12,7 @@
 
     {
         "name": "Classic Americano",
-        "image": "lib/assets/drawable-hdpi/coffee_cup3.png",
+        "image": "assets/drawable-hdpi/coffee_cup3.png",
         "type":"coffee",
         "size": "Small",
         "topping": "Wipped Cream",
@@ -23,7 +23,7 @@
 
     {
         "name": "Espresso",
-        "image": "lib/assets/drawable-hdpi/coffe_cup1.png",
+        "image": "assets/drawable-hdpi/coffe_cup1.png",
         "type":"coffee",
         "size": "Large",
         "topping": "None",
@@ -33,7 +33,7 @@
     },
     {
         "name": "Cappuccino",
-        "image": "lib/assets/drawable-hdpi/coffee_cup2.png",
+        "image": "assets/drawable-hdpi/coffee_cup2.png",
         "type":"coffee",
         "size": "Large",
         "topping": "None",
@@ -44,7 +44,7 @@
 
     {
         "name": "Hot Tea",
-        "image": "lib/assets/drawable-hdpi/tea_cup.png",
+        "image": "assets/drawable-hdpi/tea_cup.png",
         "type":"tea",
         "size": "Large",
         "topping": "Aloe Vera",
@@ -54,7 +54,7 @@
     },
     {
         "name": "Iced Tea",
-        "image": "lib/assets/drawable-hdpi/tea_cup.png",
+        "image": "assets/drawable-hdpi/tea_cup.png",
         "type":"tea",
         "size": "Small",
         "topping": "None",
