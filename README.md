@@ -24,3 +24,5 @@ Inside the home page tap on the left buttons to filter the items. Tap on a item 
 In this app is used the flutter_bloc, and cubbit for state management.
 
 In the test folder have some BloC and widgets test.
+
+The coffeshopapp.apk can be used for testing on android devices.
